@@ -1,2 +1,1 @@
-# amzscraper
-The script scrapes the relevant amazon pages to scrape reviews. The inspiration for this was ScrapeHero and a recent gig I needed this for. 
+The main script is PerAsinScraper.py which does all the heavy lifting. main.py is the hook to the scraper. I used flask to host the api and test you can run the scraper stand-alone in way you want.
