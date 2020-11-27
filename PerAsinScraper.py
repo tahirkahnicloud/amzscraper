@@ -65,15 +65,13 @@ class PerAsinScraper:
         # step1 completed
         if text is None or text['products'] is None:
             return
-        ret_dict = {"reviews": []}
+        ret_dict = {"products": []}
         review = {'title': text['products'][0]['title'], 'url': text['products'][0]['url'],
                   'rating': text['products'][0]['rating'], 'reviews': text['products'][0]['reviews'],
                   'price': text['products'][0]['price']}
-        ret_dict['reviews'].append(review)
+        ret_dict['products'].append(review)
 
-        return json.dumps(ret_dict)
-
-
+        return ret_dict
 
     def scrape_step1(self, url, asin):
         # step1 start
@@ -163,7 +161,7 @@ class PerAsinScraper:
                     review['rating'] = row['rating'].split(' out of')[0]
                     reviews_dict["reviews"].append(review)
             sleep(5)
-        return json.dumps(reviews_dict)
+        return reviews_dict
 
     def get_link_to_all_reviews(self):
         if self.number_of_reviews is None or self.number_of_reviews == '':
@@ -172,10 +170,17 @@ class PerAsinScraper:
         self.number_of_reviews = self.number_of_reviews.replace(",", "")
         urllist = []
         number_page_reviews = int(int(self.number_of_reviews) / 10)
+
         if number_page_reviews % 2 == 0:
             number_page_reviews += 1
         else:
             number_page_reviews += 2
+
+        # im limiting the number of reviews here so that we dont get timed out
+        # limiting reviews to 50
+
+        if number_page_reviews > 5:
+            number_page_reviews = 5
 
         ind = self.url.index('=', 0)
         asin = self.url[ind + 1:len(self.url)]
